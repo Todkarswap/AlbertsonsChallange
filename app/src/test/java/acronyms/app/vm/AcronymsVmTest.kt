@@ -37,7 +37,7 @@ internal class AcronymsVmTest {
 
     @Test
     fun `test api call for Full Form Success`() = runTest {
-        TestCase.assertEquals(Default, vm.viewState.value)
+        TestCase.assertEquals(Default, vm.uiState.value)
         coEvery { repo.getFullFormFromAcronym("HHH") } returns flow {
             emit(ApiResult.Success(listOf(AbbrevationResult())))
         }
@@ -46,38 +46,39 @@ internal class AcronymsVmTest {
         delay(2000)
 
         coVerify(exactly = 1) { repo.getFullFormFromAcronym("HHH") }
-        TestCase.assertEquals(1, (vm.viewState.value as ProfileLoaded).data?.size)
+
+        TestCase.assertEquals(1, (vm.uiState.value as SuccessState).data?.size)
 
     }
 
     @Test
     fun `test api call for Full Form Error`() = runTest {
-        TestCase.assertEquals(Default, vm.viewState.value)
+        TestCase.assertEquals(Default, vm.uiState.value)
         coEvery { repo.getFullFormFromAcronym("HHH") } returns flow {
             emit(ApiResult.Error("No data Found", null))
         }
          vm.searchFullForms("HHH")
         delay(2000)
-        TestCase.assertNotSame(ProfileLoaded(listOf()), vm.viewState.value)
-        TestCase.assertEquals("No data Found", (vm.viewState.value as ProfileLoadFailure).error.toString())
+        TestCase.assertNotSame(SuccessState(listOf()), vm.uiState.value)
+        TestCase.assertEquals("No data Found", (vm.uiState.value as ErrorState).error.toString())
 
     }
 
     @Test
     fun `test api call for Full Form to show Loading`() = runTest {
-        TestCase.assertEquals(Default, vm.viewState.value)
+        TestCase.assertEquals(Default, vm.uiState.value)
         coEvery { repo.getFullFormFromAcronym("HHH") } returns flow {
             emit(ApiResult.Loading)
         }
          vm.searchFullForms("HHH")
         delay(2000)
-        TestCase.assertEquals(Loading, vm.viewState.value)
+        TestCase.assertEquals(Loading, vm.uiState.value)
     }
 
 
     @Test
     fun `test api call for Short Form Success`() = runTest {
-        TestCase.assertEquals(Default, vm.viewState.value)
+        TestCase.assertEquals(Default, vm.uiState.value)
         coEvery { repo.getAcronymFromFullForm("HHH") } returns flow {
             emit(ApiResult.Success(listOf(AbbrevationResult())))
         }
@@ -87,13 +88,13 @@ internal class AcronymsVmTest {
         delay(2000)
 
         coVerify(exactly = 1) { repo.getAcronymFromFullForm("HHH") }
-        TestCase.assertEquals(1, (vm.viewState.value as ProfileLoaded).data?.size)
+        TestCase.assertEquals(1, (vm.uiState.value as SuccessState).data?.size)
 
     }
 
     @Test
     fun `test api call for Short Form Error`() = runTest {
-        TestCase.assertEquals(Default, vm.viewState.value )
+        TestCase.assertEquals(Default, vm.uiState.value )
         coEvery { repo.getAcronymFromFullForm("HHH") } returns flow {
             emit(ApiResult.Error("No data Found", null))
         }
@@ -101,21 +102,21 @@ internal class AcronymsVmTest {
         vm.searchFullForms("HHH")
         delay(2000)
 
-        TestCase.assertNotSame(ProfileLoaded(listOf()), vm.viewState.value)
-        TestCase.assertEquals("No data Found", (vm.viewState.value as ProfileLoadFailure).error.toString())
+        TestCase.assertNotSame(SuccessState(listOf()), vm.uiState.value)
+        TestCase.assertEquals("No data Found", (vm.uiState.value as ErrorState).error.toString())
 
     }
 
     @Test
     fun `test api call for Short Form to show Loading`() = runTest {
-        TestCase.assertEquals(Default, vm.viewState.value)
+        TestCase.assertEquals(Default, vm.uiState.value)
         coEvery { repo.getAcronymFromFullForm("HHH") } returns flow {
             emit(ApiResult.Loading)
         }
         vm.isFullForm.value = false
         vm.searchFullForms("HHH")
         delay(2000)
-        TestCase.assertEquals(Loading, vm.viewState.value)
+        TestCase.assertEquals(Loading, vm.uiState.value)
 
     }
     @OptIn(ExperimentalTime::class)

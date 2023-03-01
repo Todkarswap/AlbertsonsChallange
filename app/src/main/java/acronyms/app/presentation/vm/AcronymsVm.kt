@@ -22,7 +22,7 @@ class AcronymsVm @Inject constructor(
 
     var title = mutableStateOf("")
 
-    var viewState = mutableStateOf<ViewState>(Default)
+    var uiState = mutableStateOf<UiState>(Default)
 
     val isFullForm = mutableStateOf(true)
 
@@ -47,7 +47,7 @@ class AcronymsVm @Inject constructor(
         if (query.isNotEmpty()) {
             debounceQuery.emit(query)
         } else {
-            viewState.value = Default
+            uiState.value = Default
         }
     }
 
@@ -64,16 +64,16 @@ class AcronymsVm @Inject constructor(
             .collect { result ->
                 when (result) {
                     is ApiResult.Success -> {
-                        viewState.value = ProfileLoaded(result.value)
+                        uiState.value = SuccessState(result.value)
                     }
                     is ApiResult.Error -> {
                         result.message?.let {
-                            viewState.value = ProfileLoadFailure(result.message.toString())
+                            uiState.value = ErrorState(result.message.toString())
                         }
 
                     }
                     is ApiResult.Loading -> {
-                        viewState.value = Loading
+                        uiState.value = Loading
                     }
                 }
             }
@@ -92,13 +92,13 @@ class AcronymsVm @Inject constructor(
             .collect { result ->
                 when (result) {
                     is ApiResult.Success -> {
-                        viewState.value = ProfileLoaded(result.value)
+                        uiState.value = SuccessState(result.value)
                     }
                     is ApiResult.Error -> {
-                        viewState.value = ProfileLoadFailure(result.message.toString())
+                        uiState.value = ErrorState(result.message.toString())
                     }
                     is ApiResult.Loading -> {
-                        viewState.value = Loading
+                        uiState.value = Loading
                     }
                 }
             }
@@ -106,10 +106,10 @@ class AcronymsVm @Inject constructor(
 
 }
 
-sealed class ViewState
-data class ProfileLoaded(val data: List<AbbrevationResult>?) : ViewState()
-object Loading : ViewState()
-object Default : ViewState()
-class ProfileLoadFailure(val error: String? = null) : ViewState()
+sealed class UiState
+data class SuccessState(val data: List<AbbrevationResult>?) : UiState()
+object Loading : UiState()
+object Default : UiState()
+class ErrorState(val error: String? = null) : UiState()
 
 

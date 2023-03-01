@@ -11,5 +11,8 @@
     <string name="btn_long_form">Long Form</string>
     <string name="lbl_search">Search</string>
     <string name="lbl_no_data_found">No data found</string>
+    <string name="lbl_long_form">Long Form :</string>
+    <string name="lbl_since">Since :</string>
+    <string name="lbl_frequency">Frequency :</string>
 
 </resources>

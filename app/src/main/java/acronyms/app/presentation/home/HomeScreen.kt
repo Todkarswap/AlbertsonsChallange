@@ -3,8 +3,10 @@ package acronyms.app.presentation.home
 import acronyms.app.R
 import acronyms.app.presentation.vm.*
 import acronyms.app.ui.components.*
+import acronyms.app.ui.theme.OffWhite
 import acronyms.app.utils.networkconnection.ConnectionState
 import acronyms.app.utils.networkconnection.connectivityState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -97,7 +99,7 @@ fun SearchScreen(viewModel: AcronymsVm, isConnected: Boolean) {
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
-            .padding(5.dp)
+            .background(Color.White)
     ) {
 
         val (search, selection, shimmerList, list, noDataFound) = createRefs()
@@ -149,7 +151,7 @@ fun SearchScreen(viewModel: AcronymsVm, isConnected: Boolean) {
             },
         )
 
-        viewModel.viewState.value.let {
+        viewModel.uiState.value.let {
             when (it) {
                 is Loading -> {
                     LazyColumn(
@@ -158,14 +160,14 @@ fun SearchScreen(viewModel: AcronymsVm, isConnected: Boolean) {
                                 start.linkTo(parent.start)
                                 end.linkTo(parent.end)
                                 top.linkTo(selection.bottom)
-                            },
+                            }.background(OffWhite),
                     ) {
                         repeat(6) {
                             item { LoadingShimmerEffect() }
                         }
                     }
                 }
-                is ProfileLoaded -> {
+                is SuccessState -> {
                     LazyColumn(modifier = Modifier
                         .constrainAs(list) {
                             start.linkTo(parent.start)
@@ -173,22 +175,23 @@ fun SearchScreen(viewModel: AcronymsVm, isConnected: Boolean) {
                             top.linkTo(selection.bottom)
                         }
                         .padding(5.dp)
+                        .background(OffWhite)
                     ) {
                         it.data?.let {
                             items(it) { data ->
-                                AcromineItem(abbreviationResult = data)
+                                AcronymItem(abbreviationResult = data)
                             }
                         }
                     }
                 }
-                is ProfileLoadFailure -> {
+                is ErrorState -> {
                     Column(
                         modifier = Modifier.constrainAs(noDataFound) {
                             top.linkTo(selection.bottom)
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
                             bottom.linkTo(parent.bottom)
-                        },
+                        }.background(OffWhite),
                         verticalArrangement = Arrangement.Center,
                     ) {
 
@@ -219,7 +222,7 @@ fun SearchScreen(viewModel: AcronymsVm, isConnected: Boolean) {
                             modifier = Modifier.wrapContentWidth(),
                             textAlign = TextAlign.Center,
                             color = Color.Black,
-                            fontSize = 12.sp
+                            fontSize = 18.sp
                         )
                     }
                 }
