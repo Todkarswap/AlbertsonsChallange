@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Acronyms</string>
+    <string name="error_bad_request">Bad request</string>
+    <string name="error_unauthorised_service">Unauthorised service</string>
+    <string name="error_service_forbidden">Service Forbidden</string>
+    <string name="error_not_found">Not Found</string>
+    <string name="error_internal_server_error">Internal server error</string>
+    <string name="error_service_unavailable">Service Unavailable</string>
+    <string name="error">Error</string>
+    <string name="btn_short_form">Short Form</string>
+    <string name="btn_long_form">Long Form</string>
+    <string name="lbl_search">Search</string>
+    <string name="lbl_no_data_found">No data found</string>
+
+</resources>
