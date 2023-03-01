@@ -14,7 +14,13 @@ open class AcronymsRepo @Inject constructor(
     @ApplicationContext val context: Context,
     private var client: ApiInterface
 ) {
-
+    /**
+     * Used to get the Full Form from acronym entered by the user
+     *
+     * @param query : input query from user
+     * @return  Api call result wrapped in ApiResult
+     *
+     * */
     suspend fun getFullFormFromAcronym(query: String) = flow {
         emit(ApiResult.Loading)
         val response = client.getFullFormFromAcronym(query)
@@ -33,6 +39,13 @@ open class AcronymsRepo @Inject constructor(
         }
     }
 
+    /**
+     * Used to get the acronym from Full Form entered by the user
+     *
+     * @param query : input query from user
+     * @return  Api call result wrapped in ApiResult
+     *
+     * */
     suspend fun getAcronymFromFullForm(query: String) = flow {
         emit(ApiResult.Loading)
         val response = client.getAcronymFromFullForm(query)
@@ -51,6 +64,11 @@ open class AcronymsRepo @Inject constructor(
         }
     }
 
+    /**
+     * Used to handle api error and emit error
+     * @param code Http response code
+     * @param emitError It is a higher order function
+     */
     suspend fun handleError(
         code: Int,
         emitError: suspend (message: String) -> Unit

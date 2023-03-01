@@ -106,10 +106,12 @@ fun SearchScreen(viewModel: AcronymsVm, isConnected: Boolean) {
             value = title.value,
             maxLines = 2,
             onValueChange = {
-                viewModel.title.value = it
-                scope.launch {
-                    if (isConnected) {
-                        viewModel.searchFullForms(title.value)
+                if (!it.startsWith(" ")) {
+                    viewModel.title.value = it
+                    scope.launch {
+                        if (isConnected) {
+                            viewModel.searchFullForms(title.value)
+                        }
                     }
                 }
             },
@@ -119,7 +121,7 @@ fun SearchScreen(viewModel: AcronymsVm, isConnected: Boolean) {
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 }
-                .fillMaxWidth()
+                .fillMaxWidth(.98f)
                 .wrapContentHeight()
                 .padding(10.dp),
             placeholder = { Text(text = stringResource(R.string.lbl_search)) },
@@ -164,11 +166,14 @@ fun SearchScreen(viewModel: AcronymsVm, isConnected: Boolean) {
                     }
                 }
                 is ProfileLoaded -> {
-                    LazyColumn(modifier = Modifier.constrainAs(list) {
-                        start.linkTo(parent.start)
-                        end.linkTo(parent.end)
-                        top.linkTo(selection.bottom)
-                    }) {
+                    LazyColumn(modifier = Modifier
+                        .constrainAs(list) {
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                            top.linkTo(selection.bottom)
+                        }
+                        .padding(5.dp)
+                    ) {
                         it.data?.let {
                             items(it) { data ->
                                 AcromineItem(abbreviationResult = data)

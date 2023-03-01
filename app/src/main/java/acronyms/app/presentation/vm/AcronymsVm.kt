@@ -35,12 +35,14 @@ class AcronymsVm @Inject constructor(
             if (isFullForm.value) {
                 callGetFullForm(it)
             } else {
-                callGetShortForm(it)
+                callGetAcronym(it)
             }
         }
     }.stateIn(viewModelScope + dispatcher, SharingStarted.Eagerly, "")
 
-
+    /**
+     * Used to debounce the input query from user
+     */
     suspend fun searchFullForms(query: String) {
         if (query.isNotEmpty()) {
             debounceQuery.emit(query)
@@ -49,6 +51,14 @@ class AcronymsVm @Inject constructor(
         }
     }
 
+
+    /**
+     * Used to get the Full Form  from acronym entered by the user
+     *
+     * @param query : input query from user
+     * @return  ViewState along with the data and error
+     *
+     * */
     private suspend fun callGetFullForm(query: String) {
         acronymsRepo.getFullFormFromAcronym(query = query)
             .collect { result ->
@@ -70,7 +80,14 @@ class AcronymsVm @Inject constructor(
     }
 
 
-    private suspend fun callGetShortForm(query: String) {
+    /**
+     * Used to get the acronym from Full Form entered by the user
+     *
+     * @param query : input query from user
+     * @return  ViewState along with the data and error
+     *
+     * */
+    private suspend fun callGetAcronym(query: String) {
         acronymsRepo.getAcronymFromFullForm(query = query)
             .collect { result ->
                 when (result) {
